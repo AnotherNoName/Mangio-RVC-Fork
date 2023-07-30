@@ -51,7 +51,7 @@ shutil.rmtree("%s/runtime/Lib/site-packages/uvr5_pack" % (now_dir), ignore_error
 os.makedirs(tmp, exist_ok=True)
 os.makedirs(os.path.join(now_dir, "logs"), exist_ok=True)
 os.makedirs(os.path.join(now_dir, "audios"), exist_ok=True)
-os.makedirs(os.path.join(now_dir, "datasets"), exist_ok=True)
+os.makedirs(os.path.join(now_dir, "dataset"), exist_ok=True)
 os.makedirs(os.path.join(now_dir, "weights"), exist_ok=True)
 os.environ["TEMP"] = tmp
 warnings.filterwarnings("ignore")
@@ -941,26 +941,6 @@ def change_f0(
         {"visible": False, "__type__": "update"},
     )
 
-
-global log_interval
-
-
-def set_log_interval(exp_dir, batch_size12):
-    log_interval = 1
-
-    folder_path = os.path.join(exp_dir, "1_16k_wavs")
-
-    if os.path.exists(folder_path) and os.path.isdir(folder_path):
-        wav_files = [f for f in os.listdir(folder_path) if f.endswith(".wav")]
-        if wav_files:
-            sample_size = len(wav_files)
-            log_interval = math.ceil(sample_size / batch_size12)
-            if log_interval > 1:
-                log_interval += 1
-
-    return log_interval
-
-
 # but3.click(click_train,[exp_dir1,sr2,if_f0_3,save_epoch10,total_epoch11,batch_size12,if_save_latest13,pretrained_G14,pretrained_D15,gpus16])
 def click_train(
     exp_dir1,
@@ -988,9 +968,6 @@ def click_train(
         if version19 == "v1"
         else "%s/3_feature768" % (exp_dir)
     )
-
-    log_interval = set_log_interval(exp_dir, batch_size12)
-
     if if_f0_3:
         f0_dir = "%s/2a_f0" % (exp_dir)
         f0nsf_dir = "%s/2b-f0nsf" % (exp_dir)
@@ -1060,7 +1037,7 @@ def click_train(
         ####
         cmd = (
             config.python_cmd
-            + " train_nsf_sim_cache_sid_load_pretrain.py -e %s -sr %s -f0 %s -bs %s -g %s -te %s -se %s %s %s -l %s -c %s -sw %s -v %s -li %s"
+            + " train_nsf_sim_cache_sid_load_pretrain.py -e %s -sr %s -f0 %s -bs %s -g %s -te %s -se %s %s %s -l %s -c %s -sw %s -v %s"
             % (
                 exp_dir1,
                 sr2,
@@ -1075,7 +1052,6 @@ def click_train(
                 1 if if_cache_gpu17 == True else 0,
                 1 if if_save_every_weights18 == True else 0,
                 version19,
-                log_interval,
             )
         )
     else:
@@ -1095,7 +1071,6 @@ def click_train(
                 1 if if_cache_gpu17 == True else 0,
                 1 if if_save_every_weights18 == True else 0,
                 version19,
-                log_interval,
             )
         )
     print(cmd)
@@ -2499,7 +2474,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Mangio-RVC-Web 💻") as app:
                 with gr.Row():
                     trainset_dir4 = gr.Textbox(
                         label=i18n("输入训练文件夹路径"),
-                        value=os.path.abspath(os.getcwd()) + "\\datasets\\",
+                        value=os.path.abspath(os.getcwd()) + "/dataset/",
                     )
                     spk_id5 = gr.Slider(
                         minimum=0,
@@ -3087,7 +3062,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Mangio-RVC-Web 💻") as app:
         app.queue(concurrency_count=511, max_size=1022).launch(
             server_name="0.0.0.0",
             inbrowser=not config.noautoopen,
-            server_port=config.listen_port,
+            server_port=8000,
             quiet=False,
         )
 
