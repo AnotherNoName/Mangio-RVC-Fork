@@ -3087,7 +3087,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Mangio-RVC-Web 💻") as app:
         app.queue(concurrency_count=511, max_size=1022).launch(
             server_name="0.0.0.0",
             inbrowser=not config.noautoopen,
-            server_port=config.listen_port,
+            server_port=8000,
             quiet=False,
         )
 
