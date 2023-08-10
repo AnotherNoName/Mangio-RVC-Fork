@@ -51,7 +51,7 @@ shutil.rmtree("%s/runtime/Lib/site-packages/uvr5_pack" % (now_dir), ignore_error
 os.makedirs(tmp, exist_ok=True)
 os.makedirs(os.path.join(now_dir, "logs"), exist_ok=True)
 os.makedirs(os.path.join(now_dir, "audios"), exist_ok=True)
-os.makedirs(os.path.join(now_dir, "datasets"), exist_ok=True)
+os.makedirs(os.path.join(now_dir, "dataset"), exist_ok=True)
 os.makedirs(os.path.join(now_dir, "weights"), exist_ok=True)
 os.environ["TEMP"] = tmp
 warnings.filterwarnings("ignore")
@@ -2499,7 +2499,7 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Mangio-RVC-Web 💻") as app:
                 with gr.Row():
                     trainset_dir4 = gr.Textbox(
                         label=i18n("输入训练文件夹路径"),
-                        value=os.path.abspath(os.getcwd()) + "\\datasets\\",
+                        value=os.path.abspath(os.getcwd()) + "/dataset/",
                     )
                     spk_id5 = gr.Slider(
                         minimum=0,
